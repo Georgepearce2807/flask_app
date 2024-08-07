@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Revision Page</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <main style="margin-left: 15%;">
+        <h3>Year 11 Subject Revision</h3>  
+
+        
+        {% for subject in subjects %}
+        <div onclick="toggleMenu('menuContent{{ subject.id }}')" style="cursor: pointer;">
+            {{ subject.name }}
+        </div>
+        <div id="menuContent{{ subject.id }}" style="display: none;">
+            <ul id="moduleList{{ subject.id }}" style="list-style-type: none;">
+                {% for module in subject.modules %}
+                <li>
+                    <div onclick="toggleSubMenu('subMenuContent{{ module.id }}')" style="cursor: pointer;">
+                        {{ module.name }}
+                    </div>
+                    <ul style="list-style-type: none;">
+                        <li>
+                            <div id="subMenuContent{{ module.id }}" style="display: none;">
+                                <div id="uploadedFiles{{ module.id }}" style="margin-top: 10px;">
+                                    {% for file in module.files %}
+                                    <a href="{{ url_for('uploaded_file', filename=file.filename) }}" target="_blank">{{ file.filename }}</a><br>
+                                    {% endfor %}
+                                </div>
+                                <br><br>
+                                <form action="{{ url_for('upload', module_id=module.id) }}" method="POST" enctype="multipart/form-data">
+                                    <label for="fileUpload{{ module.id }}">Upload file:</label>
+                                    <input type="file" id="fileUpload{{ module.id }}" name="file">
+                                    <button type="submit">Upload</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        
+       
+
+        <script>
+            function toggleMenu(menuId) {
+                const menu = document.getElementById(menuId);
+                menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+            }
+
+            function toggleSubMenu(subMenuId) {
+                const subMenu = document.getElementById(subMenuId);
+                subMenu.style.display = subMenu.style.display === 'none' || subMenu.style.display === '' ? 'block' : 'none';
+            }
+        </script>
+    </main>
+  </body>
+</html>
